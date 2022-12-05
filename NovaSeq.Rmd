@@ -1,0 +1,83 @@
+---
+title: "NovaSeq"
+author: "Tush"
+date: "27/02/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r load libraries}
+library(knitr)
+library(rmarkdown)
+library(ggplot2)
+library(ggpubr)
+```
+
+### importing the novaseq data with library concentartion ###
+
+```{r qpcrfinal}
+
+novaseq <- read.csv(file.choose())
+
+## attaching dataset to r for easy searching #
+
+attach(novaseq)
+View(novaseq)
+```
+
+
+```{r }
+
+ggscatter(novaseq, x = "Libcocn", y = "genome_coverage")
+
+ggscatter(percentages, x = "MiSeq_schisto", y = "Quantity_AT1", conf.int = TRUE, cor.coef = TRUE, cor.method = "spearman", xlab = "Quantity_AT1", ylab = "MiSeq_%Schisto", add = "reg.line", palette = c("blue", "green"), color = "blue")
+
+ggscatter(percentages, x = "MiSeq_schisto", y = "Quantity_AT1")
+
+ggplot2::aes(x == "qpcrfinal$Ct_AT1", y = "qpcrfinal$Ct_16S")
+
+```
+
+### Egg reduction rate (ERR) for eggs.1
+
+```{r  include=FALSE}
+eggs <- readxl::read_xlsx(file.choose())
+eggs.1 <- eggs[, c(1,5,7,8,9,10,24,25)]
+
+100*(1- kasepg_2/kasepg_1)
+
+eggs.1$ERR <- c(100*(abs(1- eggs.1$kasepg_m2 / eggs.1$kasepg_m1))) # ERR
+
+ggplot(eggs.1, aes(x=ERR, fill=treatment, na.rm=T)) + xlim(0,100) + geom_density() + theme_bw() 
+ggplot(eggs.1, aes(x=ERR, fill=treatment, na.rm=T)) + xlim(0,100) + geom_density() + theme_bw() + geom_hline(data = timepoint)
+
+ggplot(eggs.1, aes(x=treatment,y=ERR))  + theme_bw() + geom_point() + ylim(0,100)
+
+#filtering unique eggs data by infrapopID
+eggs <- read.csv(file.choose())
+eggsUniq <- eggs %>% distinct(infrapop_id, .keep_all = TRUE)
+write.csv(eggsUniq, file = "Eggs_88.csv")
+
+#******* filtering those with ERR less than 90% @WHO
+
+xx <- pdata %>% filter(Treatment=="Intensive", Tp == 2)
+
+lessThan90 <- eggs.1 %>% filter(ERR<90)
+
+#**** ploting a bit to see how it looks.
+
+ggplot(data = fst_villages, aes(x = reorder(Villages, fst), y=fst)) + geom_col(aes(fill=location)) + theme_bw() + geom_line(aes(x=Villages, y=linear_distance_km * scaleFactor, group=1)) + scale_y_continuous(name="Weir and Cockerham weighted Fst", sec.axis=sec_axis(~./scaleFactor, name="Linear distance (km)"))
+
+
+ggplot(data = lessThan90, aes(x=ERR, y=treatment)) + geom_point()
+
+```
+
+
+
+
+
