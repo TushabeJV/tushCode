@@ -1,0 +1,112 @@
+---
+title: "Tree_174"
+author: "Tushabe"
+date: "02/05/2019"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(dplyr)
+library(ggtree)
+library(ggplot2)
+library(ape)
+library(reshape2)
+library(plyr)
+```
+
+#ploting tree_174#
+```{r }
+Tree_174 <- read.csv(file.choose(), header = T, row.names =1, check.names=FALSE)
+pdata <- read.csv(file.choose(), header = T)
+matrix <- as.matrix(Tree_174)
+Tree174 <- nj(matrix)
+
+
+cols  <-  colorRampPalette(brewer.pal(8, "Set1"))(197)
+ggtree(Tree174) + geom_tiplab(size = 2) + geom_treescale(width=4)
+
+tr174 <- full_join(Tree174, pdata, by='Sanger_Sample_ID.1')
+
+ggtree(Tree_174, layout="circular", aes(color= as.factor(Time.point))) %<+% pdata +
+  scale_color_manual(values=c("red","blue","green","purple","orange","grey","yellow","violet", "chocolate", "black","pink", "gold" ), na.value = "black") + geom_tiplab2(aes(label=Time.point)) + geom_point(size=0.2)
+
+#removing name labels in tree#
+ggtree(Tree174, layout="circular", branch.length = 'none', aes(color= Island, na.rm = TRUE)) %<+% pdata + scale_color_manual(values=c("red","blue","green","purple","orange","grey","yellow","violet", "chocolate", "black","pink", "gold" ), na.value = "black") + theme(legend.position="right") + ggtitle("Population structure by island_174") + theme(plot.title = element_text(hjust = 0.5)) 
+
+
+ggtree(tree, layout="circular", aes(color= Treatment, na.rm = TRUE)) %<+% pdata + scale_color_manual(values=c("red","blue","green","purple","orange","grey","yellow","violet", "chocolate", "black","pink", "gold" ), na.value = "black") + theme(legend.position="right")
+
+ggtree(tree, layout="circular", aes(color= as.factor(Time.point), na.rm = TRUE)) %<+% pdata + scale_color_manual(values=c("red","blue","green","purple","orange","grey","yellow","violet", "chocolate", "black","pink", "gold" ), na.value = "black") + theme(legend.position="right") + scale_color_discrete(name = "Time point")
+
+ggtree(tree, layout="circular", aes(color= Vname, na.rm = TRUE)) %<+% pdata + scale_color_manual(values=c("red","blue","green","purple","orange","grey","yellow","violet", "chocolate", "black","pink", "gold", "moss", "teal" ), na.value = "black") + theme(legend.position="right") + ggtitle("Population structure for villages including 4 villages of the outgroup") 
+
+# ploting 8 villages #
+
+ggtree(tree, layout="circular", aes(color= Vname, na.rm = TRUE)) %<+% pdata + scale_color_manual(values=c("red","blue","green","purple","orange","grey","yellow","violet", "chocolate"), na.value = "black") + theme(legend.position="right") + ggtitle("Population structure for villages") 
+
+ggtree(tree, layout="circular", aes(color= as.factor(Island))) %<+% pdata + geom_tiplab2(aes(label=Sanger_Sample_ID.1)) + geom_point(size=0.2) + theme(legend.position="right")
+
+ggtree(tree, layout="rectangular", aes(color= as.factor(Time.point))) %<+% pdata +
+  scale_color_manual(values=c("red","blue","green","purple","orange","grey","yellow","violet"), na.value="black") + geom_tiplab2(aes(label=Time.point)) + ggtitle("Phylogenetic tree for population structure per Time point") 
+
+#*** Plotting tree per sample ***#
+
+ggtree(tree, layout="circular", aes(color= as.factor(Sanger_Sample_ID))) %<+% pdata + ggtitle("Phylogenetic tree for population structure per Sample") + scale_color_manual(values=c("red","blue","green","purple","orange","grey","yellow","violet"), na.value="black") + geom_tiplab2(aes(label=Sanger_Sample_ID))
+
+ggtree(tree, layout="circular", aes(color= as.factor(Sanger_Sample_ID.1))) %<+% pdata + geom_tiplab2(aes(label=Sanger_Sample_ID.1))
+
+
+ggtree(Tree174,layout = "circular") + ggtitle("Tree_174") + theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+#plotting tree_201
+```{r }
+Tree_201 <- read.csv(file.choose(), header = T, row.names =1, check.names=FALSE)
+pdata2 <- read.csv(file.choose(), header = T)
+matrix <- as.matrix(Tree_201)
+Tree201 <- nj(matrix)
+
+ggtree(Tree201,layout = "circular") + ggtitle("Tree_201") + theme(plot.title = element_text(hjust = 0.5))
+
+cols  <-  colorRampPalette(brewer.pal(8, "Set1"))(197)
+ggtree(Tree174) + geom_tiplab(size = 2) + geom_treescale(width=4)
+
+tr174 <- full_join(Tree201, pdata, by='Sanger_Sample_ID.1')
+
+ggtree(Tree201, layout="circular", aes(color= as.factor(Time.point))) %<+% pdata2 +
+  scale_color_manual(values=c("red","blue","green","purple","orange","grey","yellow","violet", "chocolate", "black","pink", "gold" ), na.value = "black") + geom_tiplab2(aes(label=Time.point)) + geom_point(size=0.2)
+
+#removing name labels in tree#
+ggtree(Tree201, layout="circular", aes(color= Location, na.rm = TRUE)) %<+% pdata2 + scale_color_manual(values=c("red","blue","green","purple","orange","grey","yellow","violet", "chocolate", "black","pink", "gold" ), na.value = "black") + theme(legend.position="right") + ggtitle("Population structure by location_201") + theme(plot.title = element_text(hjust = 0.5)) + geom_cladelabel(node=node, label = "location")
+
+ggtree(Tree201, layout="circular", aes(color= Treatment, na.rm = TRUE)) %<+% pdata2 + scale_color_manual(values=c("red","blue","green","purple","orange","grey","yellow","violet", "chocolate", "black","pink", "gold" ), na.value = "black") + theme(legend.position="right") + ggtitle("Population structure by treatment_174") + theme(plot.title = element_text(hjust = 0.5))
+
+ggtree(Tree201, layout="circular", aes(color= as.factor(District), na.rm = TRUE)) %<+% pdata2 + scale_color_manual(values=c("red","blue","green","purple","orange","grey","yellow","violet", "chocolate", "black","pink", "gold" ), na.value = "black") + theme(legend.position="right") + scale_color_discrete(name = "Time point") + ggtitle("Population structure by district_174") + theme(plot.title = element_text(hjust = 0.5))
+
+ggtree(Tree201, layout="circular", aes(color= Vname, na.rm = TRUE)) %<+% pdata2 + scale_color_manual(values=c("red","blue","green","purple","orange","grey","yellow","violet", "chocolate", "black","pink", "gold", "moss", "teal" ), na.value = "black") + theme(legend.position="right") + ggtitle("Population structure for villages including 4 villages of the outgroup") 
+
+ggtree(Tree174, layout="circular", aes(color= Vname, na.rm = TRUE)) %<+% pdata + scale_color_manual(values=c("red","blue","green","purple","orange","grey","yellow","violet", "chocolate", "black","pink", "gold", "moss", "teal" ), na.value = "black") + theme(legend.position="right") + ggtitle("Population structure by village_174") + theme(plot.title = element_text(hjust = 0.5))
+
+
+#ploting 8 villages #
+
+ggtree(tree, layout="circular", aes(color= Vname, na.rm = TRUE)) %<+% pdata + scale_color_manual(values=c("red","blue","green","purple","orange","grey","yellow","violet", "chocolate"), na.value = "black") + theme(legend.position="right") + ggtitle("Population structure for villages") 
+
+ggtree(tree, layout="circular", aes(color= as.factor(Island))) %<+% pdata + geom_tiplab2(aes(label=Sanger_Sample_ID.1)) + geom_point(size=0.2) + theme(legend.position="right")
+
+ggtree(tree, layout="rectangular", aes(color= as.factor(Time.point))) %<+% pdata +
+  scale_color_manual(values=c("red","blue","green","purple","orange","grey","yellow","violet"), na.value="black") + geom_tiplab2(aes(label=Time.point)) + ggtitle("Phylogenetic tree for population structure per Time point") 
+
+#Plotting tree per sample#
+
+ggtree(Tree201, layout="circular", aes(color= as.factor(Sanger_Sample_ID.1))) %<+% pdata2 + ggtitle("Phylogenetic tree for population structure per Sample") + scale_color_manual(values=c("red","blue","green","purple","orange","grey","yellow","violet"), na.value="black") + geom_tiplab2(aes(label=Sanger_Sample_ID))
+
+ggtree(tree, layout="circular", aes(color= as.factor(Sanger_Sample_ID.1))) %<+% pdata + geom_tiplab2(aes(label=Sanger_Sample_ID.1))
+
+```
+
+
