@@ -1,0 +1,148 @@
+---
+title: "Gantt Chart"
+author: "Vianney"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## load libraries
+```{r, }
+library(plotly)
+library(scales)
+library(ggplot2)
+library(dplyr)
+library(readxl)
+library(lubridate)
+```
+
+```{r }
+
+
+# read in data
+
+# read in and format data
+Gant_data2 <- read_excel("Gantt_Chart2.xlsx", col_types = c("text", "date", "date", "text"))
+#Gant_data2 <- read_excel(file.choose(), col_types = c("text", "date", "date", "text"))
+
+# covert date in task into factor and reorder by start date
+Gant_data2$Task <- factor(Gant_data2$Task, levels = Gant_data2$Task[order(Gant_data2$Start)])
+```
+
+### create gantt chart
+```{r echo=FALSE}
+
+# Function to include yearly quarters in the plot
+
+extract_year_quarter <- function(date) {
+  year_quarter <- paste0(year(date), " Q", quarter(date))
+  return(year_quarter)
+  }
+
+## apply function to start date and create quarter colum
+Gant_data2$YearQuarter <- sapply(Gant_data2$Start, function(x) extract_year_quarter(x))
+
+# Sort data frame by start date
+Gant_data2 <- Gant_data2[order(Gant_data2$Start), ]
+
+
+ggplot(Gant_data2, aes(y = Task, x = Start, xend = End, color = Task))+ 
+  geom_segment(size = 5) + 
+  labs(x = "Timeline", y = "Task") + 
+  theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) +
+  ggtitle("Project: Development of a Schistosomias - Malaria Molecular Duplex Assay and Latrine Metgenomics")
+
+## adding the secong y axis with quarter
+
+
+# Reorder the Task variable
+ 
+Gant_data2 <- Gant_data2[order(Gant_data2$Start), ]
+
+ggplot(Gant_data2, aes(y = Task, x = Start, xend = End, color = Task, xmin = Start, xmax = End))+ 
+  geom_segment(size = 5) + 
+  labs(x = "Timeline", y = "Task") + 
+  theme(legend.position = "none") +
+  ggtitle("Development of a Schistosomias - Malaria Molecular Duplex Assay and Latrine Metgenomics") 
+
+
+```
+
+# including the year quarter information on the plot
+
+```{r}
+
+names()
+
+ggplot(Gant_data2, aes(y = Task, x = Start, xend = End, color = Task))+ 
+  geom_segment(size = 5) + 
+  labs(x = "Timeline", y = "Task") +
+  scale_y_continuous(sec_axis(name = YearQuarter))
+  theme_minimal() +
+  theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) +
+  ggtitle("Project: Development of a Schistosomias - Malria Molecular Duplex Assay")
+
+```
+
+# flip x axis ### the final chart :)
+
+```{r}
+
+
+# read in and format data
+Gant_data2 <- read_excel("/Users/tjv/Gantt_Chart2.xlsx", col_types = c("text", "date", "date", "text"))
+# Gant_data2 <- read_excel(file.choose(), col_types = c("text", "date", "date", "text"))
+
+# covert date in task into factor and reorder by start date
+Gant_data2$Task <- factor(Gant_data2$Task, levels = Gant_data2$Task[order(Gant_data2$Start)])
+
+# Sort data frame by start date
+Gant_data2 <- Gant_data2[order(Gant_data2$Start), ]
+ 
+
+# Determine the range of dates
+start_date <- min(Gant_data2$Start)
+end_date <- max(Gant_data2$End)
+
+
+ggplot(Gant_data2, aes(y = Task, x = Start, xend = End, color = Task, xmin = Start, xmax = End))+ 
+  geom_segment(size = 5) + 
+  labs(x = "Project Timeline", y = "Task") + 
+  theme(legend.position = "none") +
+  ggtitle("Development of a Schistosomias-Malaria Molecular Duplex Assay and Latrine Metgenomics") +
+  coord_flip()+
+  theme(axis.text.x = element_text(angle = 50, hjust = 1)) + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(axis.text.y = element_text(face = "bold")) +
+  theme(axis.text.x = element_text(size = 9)) +
+  theme(axis.text.x = element_text(family = "Arial"))
+
+```
+
+# Write updated data to Excel file with new name to avoid replacing older one
+```{r}
+# Install and load required libraries
+library(openxlsx)
+
+
+# Format start and end dates to remove time component
+Gant_data2$Start <- format(Gant_data2$Start, "%d-%m-%Y")
+Gant_data2$End <- format(Gant_data2$End, "%d-%m-%Y")
+
+write.xlsx(Gant_data2, '/Users/tjv/Gantt_clean.xlsx', rowNames = F)
+
+```
+
+
+## ploting the Gant Chart
+```{r, echo=FALSE}
+
+```
+
+
+```{r }
+
+```
